@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Virtual Pets</title>
+</head>
+
+<style>
+
+*{
+    box-sizing: border-box;
+}
+
+body{
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: hsl(231, 100%, 11%);
+    color: rgb(0, 71, 107);
+    text-align: center;
+}
+
+header{
+    background: lightblue;
+    color:rgb(0, 122, 179) ;
+}
+
+.game{
+    width: 90%;
+    max-width: 500px;
+    margin: 30px auto;
+    padding: 25px;
+    background: rgb(196, 222, 255);
+    border-radius: 25px;
+    box-shadow: rgba(219, 232, 255, 0.753);
+}
+
+.pet{
+    margin: 20px auto;
+    width: 180px;
+    height: 160px;
+    background: rgb(181, 228, 255);
+    border: 5px solid rgb(244, 255, 141);
+    font-size: 100px;
+}
+
+.pet-name{
+    font-size: 25px;
+    margin: 10px;
+}
+
+.status{
+    text-align: left;
+    margin: 20px 0;
+}
+
+.status p{
+    margin-bottom: 6px;
+    font-weight: bold;
+}
+
+.bar{
+    height: 18px;
+    background: blanchedalmond;
+    border-radius: 20px;
+    overflow: hidden;
+}
+
+.fill {
+    height: 100%;
+    width: 100%;
+    border-radius: 20px;
+    transition: width 0.3s;
+}
+
+#hungerBar{
+    background: #ffbe6a;
+}
+
+#happyBar{
+    background: rgb(255, 203, 212);
+}
+
+#energyBar{
+    background: rgb(255, 255, 113);
+}
+
+.button{
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 25px;
+}
+
+button{
+    border: none;
+    padding: 11px 18px;
+    border-radius: 12px;
+    background: rgb(160, 223, 255);
+    color: rgb(0, 61, 117);
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+#message{
+    min-height: 25px;
+    color:  rgb(0, 61, 117);
+    font-weight: bold;
+    margin-top: 20px;
+}
+
+.reset{
+    background: cadetblue;
+}
+
+footer{
+    padding: 20px;
+    color:  rgb(0, 61, 117);
+}
+
+</style>
+
+<body>
+    
+    <header>
+        <h1>My Virtual Pet 🐾</h1>
+        <p>💕 Take care of your little friend!</p>
+    </header>
+
+    <main class="game">
+
+        <h2>Meet your little pet! ⭐</h2>
+
+        <div class="pet" id="pet">🐹</div>
+
+        <h3 class="pet-name" id="pet-name">Peanut</h3>
+
+        <p id="mood">I'm feeling great! :D</p>
+
+        <div class="status">
+            <p>🍗 Hunger : <span id="hungerText">20</span>%</p>
+            <div class="bar">
+                <div class="fill" id="hungerBar"></div>
+            </div>
+        </div>
+
+        <div class="status">
+            <p>💗 Happiness : <span id="happyText">80</span>%</p>
+            <div class="bar">
+                <div class="fill" id="happyBar"></div>
+            </div>
+        </div>
+
+        <div class="status">
+            <p>⚡ Energy : <span id="energyText">50</span>%</p>
+            <div class="bar">
+                <div class="fill" id="energyBar"></div>
+            </div>
+        </div>
+
+        <div class="button">
+            <button onclick="feedPet()">🥜 Feed</button>
+            <button onclick="playPet()">🎮 Play</button>
+            <button onclick="sleepPet()">💤 Sleep</button>
+        </div>
+
+        <p id="message">Let's take care of Peanut! :D</p>
+
+        <button class="reset"  onclick="resetGame()">
+            🔁 Restart Game 
+        </button>
+
+    </main>
+
+    <footer>
+        By:Mika :)
+    </footer>
+
+    <script>
+
+        //pet statistics
+        let hunger = 20;
+        let happiness = 80;
+        let energy = 50;
+
+        //keep values between 0 and 100
+        function limitValue(value) {
+            if (value > 100) {
+                return 100;
+            }
+
+            if (value <0) {
+                return 0;
+            }
+
+            return value;
+        }
+
+        //update the game screen
+        function updateGame() {
+            hunger = limitValue (hunger);
+            happiness = limitValue (happiness);
+            energy = limitValue (energy);
+
+            document.getElementById("hungerText").textContent = hunger;
+            document.getElementById("happyText").textContent = happiness;
+            document.getElementById("energyText").textContent = energy;
+
+            document.getElementById("hungerBar").style.width = hunger + "%";
+            document.getElementById("happyBar").style.width = happiness + "%";
+            document.getElementById("energyBar").style.width = energy + "%";
+
+            let pet = document.getElementById("pet");
+            let mood = document.getElementById("mood");
+
+            if (hunger >= 80) {
+            pet.textContent="😓";
+            mood.textContent= "I'm hungry! Feed me!";
+            } else  if (energy <= 20) {
+                pet.textContent="😴";
+                mood.textContent="I'm sleepy!";
+            } else if (happiness <=20) {
+            pet.textContent="🥺"; 
+            mood.textContent="I'm sad... Let's play!";
+            } else {
+                pet.textContent="🐹";
+                mood.textContent="I'm feeling great! :D";
+            } 
+        }
+
+        
+
+        function feedPet() {
+            hunger -=25;
+            happiness +=5;
+
+            document.getElementById("message").textContent =
+                "Yummy! Peanut enjoyed the food! 😋";
+
+            updateGame();
+        }
+
+        //play with pet
+        function playPet() {
+            if (energy < 15) {
+                document.getElementById("message").textContent =
+                 "Peanut is to tired! Let Peanut sleep. 😴";
+                 return;
+            }
+
+            happiness +=20;
+            energy -=15;
+            hunger +=10;
+
+            document.getElementById("message").textContent =
+                "That was fun! Peanut is happy! 🤗";
+
+                updateGame();
+        }
+
+        // let pet sleep
+        function sleepPet() {
+            energy += 30;
+            hunger += 10;
+
+            document.getElementById("message").textContent =
+                "Zzz... Peanut feels refreshed... 😊";
+
+            updateGame();
+        }
+
+        //restart the game
+        function resetGame() {
+            hunger = 20;
+            happiness = 80;
+            energy = 50;
+
+            document.getElementById("message").textContent =
+                "A new day begins! ☀";
+
+            updateGame();
+        }
+
+        //show the initial game status
+        updateGame();
+    </script>
+
+</body>
+</html>
